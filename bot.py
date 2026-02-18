@@ -1,8 +1,9 @@
 import asyncio
 import os
 from aiogram import Bot, Dispatcher
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
+
 
 TOKEN = os.getenv("TOKEN")
 
@@ -20,12 +21,24 @@ QUEST = [
 user_progress = {}
 letters = {}
 
+
 @dp.message(CommandStart())
 async def start(message: Message):
     user_id = message.from_user.id
     user_progress[user_id] = 0
     letters[user_id] = []
     await message.answer("Начинаем квест!\n\n" + QUEST[0]["task"])
+    
+@dp.message(Command("reset"))
+async def reset_progress(message: Message):
+    user_id = message.from_user.id
+
+    if user_id in user_progress:
+        del user_progress[user_id]
+    if user_id in letters:
+        del letters[user_id]
+
+    await message.answer("Прогресс сброшен. Напиши /start чтобы начать заново.")
 
 @dp.message()
 async def check_answer(message: Message):
@@ -62,15 +75,5 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-from aiogram.filters import Command
 
-@dp.message(Command("reset"))
-async def reset_progress(message: Message):
-    user_id = message.from_user.id
 
-    if user_id in user_progress:
-        del user_progress[user_id]
-    if user_id in letters:
-        del letters[user_id]
-
-    await message.answer("Прогресс сброшен. Напиши /start чтобы начать заново.")
