@@ -60,5 +60,17 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-
     asyncio.run(main())
+
+from aiogram.filters import Command
+
+@dp.message(Command("reset"))
+async def reset_progress(message: Message):
+    user_id = message.from_user.id
+
+    if user_id in user_progress:
+        del user_progress[user_id]
+    if user_id in letters:
+        del letters[user_id]
+
+    await message.answer("Прогресс сброшен. Напиши /start чтобы начать заново.")
