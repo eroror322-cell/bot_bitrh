@@ -66,8 +66,6 @@ async def check_answer(message: Message):
             final_word = "".join(letters[user_id])
             await message.answer(
                 f"Ты прошла все этапы!\n\n"
-                f"Собери первые буквы слов.\n"
-                f"Итоговое место: {final_word}"
             )
     else:
         await message.answer("Неверно. Попробуй ещё.")
@@ -77,6 +75,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
